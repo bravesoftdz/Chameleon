@@ -1,0 +1,96 @@
+object AboutBox: TAboutBox
+  Left = 279
+  Top = 211
+  BorderStyle = bsDialog
+  Caption = 'About'
+  ClientHeight = 186
+  ClientWidth = 223
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  Position = poScreenCenter
+  PixelsPerInch = 96
+  object Panel1: TPanel
+    Left = 8
+    Top = 8
+    Width = 209
+    Height = 137
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ParentColor = True
+    TabOrder = 0
+    object ProductName: TLabel
+      Left = 6
+      Top = 14
+      Width = 193
+      Height = 34
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Chameleon'
+      Font.Charset = GREEK_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -29
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object Version: TLabel
+      Left = 6
+      Top = 54
+      Width = 193
+      Height = 23
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Version 0.0 (Alpha!!!)'
+      Font.Charset = GREEK_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Arial'
+      Font.Style = [fsItalic]
+      ParentFont = False
+    end
+    object Copyright: TLabel
+      Left = 6
+      Top = 86
+      Width = 193
+      Height = 18
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Nikos Georgiou'
+      Font.Charset = GREEK_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Comments: TLabel
+      Left = 6
+      Top = 110
+      Width = 193
+      Height = 18
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'nickgeorgiou@hotmail.com'
+      Font.Charset = GREEK_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+      WordWrap = True
+    end
+  end
+  object OKButton: TButton
+    Left = 74
+    Top = 156
+    Width = 75
+    Height = 25
+    Caption = 'OK'
+    Default = True
+    ModalResult = 1
+    TabOrder = 1
+  end
+end

@@ -1,5 +1,7 @@
 unit Writers;
 
+{$MODE Delphi}
+
 interface
 
 uses Windows, SysUtils, Classes, Graphics;
@@ -8,8 +10,8 @@ type
   TTextWriter = class
   private
     FStream: TStream;
-    FIdent : Cardinal;
-    FWriteIdent: Boolean;
+    FIdent: cardinal;
+    FWriteIdent: boolean;
     procedure WriteIdent;
   public
     constructor Create(AStream: TStream);
@@ -19,18 +21,18 @@ type
     procedure Write(const str: string);
     procedure WriteLn(const str: string);
     procedure WriteString(const str: string);
-    property Ident: Cardinal read FIdent write FIdent;
+    property Ident: cardinal read FIdent write FIdent;
     property Stream: TStream read FStream;
   end;
 
   TDfmWriter = class(TTextWriter)
     procedure WriteBinaryAsText(Input: TStream);
-    procedure WriteBoolProp(const Name: string; Value: Boolean);
+    procedure WriteBoolProp(const Name: string; Value: boolean);
     procedure WriteColorProp(const Name: string; Value: TColor);
     procedure WriteCustomProp(const Name, Value: string);
-    procedure WriteIntProp(const Name: string; Value : Integer);
+    procedure WriteIntProp(const Name: string; Value: integer);
     procedure WriteStringProp(const Name, Value: string);
-    procedure WritePlacement(wnd, parent : HWND);
+    procedure WritePlacement(wnd, parent: HWND);
   end;
 
 implementation
@@ -60,12 +62,15 @@ end;
 procedure TTextWriter.WriteIdent;
 var
   s: string;
-  i : Integer;
+  i: integer;
 begin
-  if FWriteIdent then begin
-    if FIdent > 0 then begin
+  if FWriteIdent then
+  begin
+    if FIdent > 0 then
+    begin
       s := '';
-      for i:=1 to FIdent do s:= s + ' ';
+      for i := 1 to FIdent do
+        s := s + ' ';
       FStream.Write(s[1], FIdent);
     end;
     FWriteIdent := False;
@@ -97,9 +102,9 @@ begin
   FWriteIdent := True;
 end;
 
-procedure TDfmWriter.WriteBoolProp(const Name: string; Value: Boolean);
+procedure TDfmWriter.WriteBoolProp(const Name: string; Value: boolean);
 const
-  s: array [false..true] of string = ('False', 'True');
+  s: array [False..True] of string = ('False', 'True');
 begin
   WriteCustomProp(Name, s[Value]);
 end;
@@ -114,7 +119,7 @@ begin
   WriteLn(Name + ' = ' + Value);
 end;
 
-procedure TDfmWriter.WriteIntProp(const Name: string; Value : Integer);
+procedure TDfmWriter.WriteIntProp(const Name: string; Value: integer);
 begin
   WriteCustomProp(Name, IntToStr(Value));
 end;
@@ -124,17 +129,17 @@ begin
   WriteCustomProp(Name, '''' + Value + '''');
 end;
 
-procedure BinToHex(Binary, Text: PChar; Count: Integer);
+procedure BinToHex(Binary, Text: PChar; Count: integer);
 const
-  HexChars: array[0..15] of Char = '0123456789ABCDEF';
+  HexChars: array[0..15] of char = '0123456789ABCDEF';
 var
-  I: Integer;
+  I: integer;
 begin
   for I := 0 to Count - 1 do
   begin
-    Text^ := HexChars[(Byte(Binary[I]) and $F0) SHR 4];
+    Text^ := HexChars[(byte(Binary[I]) and $F0) shr 4];
     Inc(Text);
-    Text^ := HexChars[(Byte(Binary[I]) and $0F)];
+    Text^ := HexChars[(byte(Binary[I]) and $0F)];
     Inc(Text);
   end;
 end;
@@ -143,18 +148,22 @@ procedure TDfmWriter.WriteBinaryAsText(Input: TStream);
 const
   BytesPerLine = 32;
 var
-  MultiLine: Boolean;
-  I: Integer;
-  Count: Longint;
-  Buffer: array[0..BytesPerLine - 1] of Char;
-  Text: array[0..BytesPerLine * 2 - 1] of Char;
+  MultiLine: boolean;
+  I: integer;
+  Count: longint;
+  Buffer: array[0..BytesPerLine - 1] of char;
+  Text: array[0..BytesPerLine * 2 - 1] of char;
 begin
   Count := Input.Size;
   MultiLine := Count > BytesPerLine;
   while Count > 0 do
   begin
-    if MultiLine then NewLine;
-    if Count >= BytesPerLine then I := BytesPerLine else I := Count;
+    if MultiLine then
+      NewLine;
+    if Count >= BytesPerLine then
+      I := BytesPerLine
+    else
+      I := Count;
     Input.Read(Buffer, I);
     BinToHex(Buffer, Text, I);
     Write(Text);
@@ -162,12 +171,13 @@ begin
   end;
 end;
 
-procedure TDfmWriter.WritePlacement(wnd, parent : HWND);
+procedure TDfmWriter.WritePlacement(wnd, parent: HWND);
 var
-  R : TRect;
+  R: TRect;
 begin
   GetWindowRect(wnd, R);
-  if IsWindow(parent) then begin
+  if IsWindow(parent) then
+  begin
     Windows.ScreenToClient(parent, R.TopLeft);
     Windows.ScreenToClient(parent, R.BottomRight);
   end;

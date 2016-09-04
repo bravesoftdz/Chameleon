@@ -1,5 +1,7 @@
 unit frmMain;
 
+{$MODE Delphi}
+
 interface
 
 uses
@@ -42,8 +44,9 @@ type
     procedure RCFileNameChange(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
   private
-    procedure GenerateDfmFile(const filename, frmname: string; wnd : HWND; PasList : TStrings);
-    procedure GeneratePasFile(const filename, frmname: string; PasList : TStrings);
+    procedure GenerateDfmFile(const filename, frmname: string;
+      wnd: HWND; PasList: TStrings);
+    procedure GeneratePasFile(const filename, frmname: string; PasList: TStrings);
     procedure GetWinInfo(wnd: HWND; ParentNode: TTreeNode);
     procedure EnableSavePas;
     procedure EnableWndInput;
@@ -58,29 +61,30 @@ implementation
 
 uses frmResults, Writers, DfmEngine, StrConsts, about1;
 
-{$R *.DFM}
+{$R *.lfm}
 
 procedure TMainForm.GetWinInfo(wnd: HWND; ParentNode: TTreeNode);
 var
-  len, i, cbcount: Integer;
-  text: PChar;
+  len, i, cbcount: integer;
+  Text: PChar;
   class_name: array [0..100] of char;
   R1, R2: TRect;
-  node1, node2 : TTreeNode;
-  childlist : TList;
+  node1, node2: TTreeNode;
+  childlist: TList;
   EnumParams: TEnumParams;
-  style, exstyle : Integer;
+  style, exstyle: integer;
   parentWnd: HWND;
   itemtext: array [0..300] of char;
 begin
-  if not IsWindow(wnd) then begin
+  if not IsWindow(wnd) then
+  begin
     Results.TreeView1.Items.AddChild(ParentNode, 'Handle = (INVALID HANDLE)');
     Exit;
   end;
   childlist := TList.Create;
   len := GetWindowTextLength(wnd) + 1;
-  GetMem(text, len);
-  GetWindowText(wnd, text, len);
+  GetMem(Text, len);
+  GetWindowText(wnd, Text, len);
   GetWindowRect(wnd, R1);
   Windows.GetClientRect(wnd, R2);
   GetClassName(wnd, class_name, 100);
@@ -89,22 +93,23 @@ begin
   parentWnd := GetParent(wnd);
   EnumParams.List := childlist;
   EnumParams.ParentWnd := wnd;
-  EnumChildWindows(wnd, @EnumChildrenProc, Integer(@EnumParams));
+  EnumChildWindows(wnd, @EnumChildrenProc, integer(@EnumParams));
 
-  with Results.TreeView1.Items do begin
+  with Results.TreeView1.Items do
+  begin
     AddChild(ParentNode, 'Handle = ' + IntToStr(wnd));
-    AddChild(ParentNode, 'Caption = ' + text);
+    AddChild(ParentNode, 'Caption = ' + Text);
     AddChild(ParentNode, 'Class name = ' + class_name);
     AddChild(ParentNode, 'Parent Handle = ' + IntToStr(parentWnd));
     node1 := AddChild(ParentNode, 'Style');
     AddChild(node1, 'Value = ' + IntToStr(style));
-    for i:= Low(WindowStyle) to High(WindowStyle) do
+    for i := Low(WindowStyle) to High(WindowStyle) do
       if ((style and WindowStyle[i]) = WindowStyle[i]) then
         AddChild(node1, WindowStyleName[i]);
 
     node1 := AddChild(ParentNode, 'Extended Style');
     AddChild(node1, 'Value = ' + IntToStr(exstyle));
-    for i:= Low(WindowStyle) to High(WindowStyle) do
+    for i := Low(WindowStyle) to High(WindowStyle) do
       if ((style and ExtendedWindowStyle[i]) = ExtendedWindowStyle[i]) then
         AddChild(node1, ExtendedWindowStyleName[i]);
     node1 := AddChild(ParentNode, 'Placement');
@@ -114,39 +119,43 @@ begin
     AddChild(node1, 'Height = ' + IntToStr(R1.Bottom - R1.Top));
     AddChild(node1, 'ClientWidth = ' + IntToStr(R2.Right));
     AddChild(node1, 'ClientHeight = ' + IntToStr(R2.Bottom));
-    if (CompareText(class_name, 'COMBOBOX')=0) then begin
+    if (CompareText(class_name, 'COMBOBOX') = 0) then
+    begin
       node1 := AddChild(ParentNode, '[List Data]');
       cbcount := SendMessage(wnd, CB_GETCOUNT, 0, 0);
-      for i:= 1 to cbcount do begin
-        SendMessage(wnd, CB_GETLBTEXT, i-1, LongInt(@itemtext));
+      for i := 1 to cbcount do
+      begin
+        SendMessage(wnd, CB_GETLBTEXT, i - 1, longint(@itemtext));
         node2 := AddChild(node1, 'Item #' + IntToStr(i));
         AddChild(node2, 'Text = ' + itemtext);
-        AddChild(node2, 'Data = ' + IntToStr(SendMessage(wnd, CB_GETITEMDATA, i-1, 0)));
+        AddChild(node2, 'Data = ' + IntToStr(SendMessage(wnd, CB_GETITEMDATA, i - 1, 0)));
       end;
     end;
-    if childlist.count > 0 then begin
+    if childlist.Count > 0 then
+    begin
       node1 := AddChild(ParentNode, 'Children information');
-      for i:= 1 to childlist.Count do begin
+      for i := 1 to childlist.Count do
+      begin
         node2 := AddChild(node1, 'Child #' + IntToStr(i));
-        GetWinInfo(Integer(childlist[i-1]), node2);
+        GetWinInfo(integer(childlist[i - 1]), node2);
       end;
     end;
   end;
-  FreeMem(text);
-  childlist.free;
+  FreeMem(Text);
+  childlist.Free;
 end;
 
 procedure TMainForm.InformationClick(Sender: TObject);
 var
-  wnd : HWND;
+  wnd: HWND;
 begin
   if optAutomatic.Checked then
-    begin
-      Application.Minimize;
-      Sleep(DelayTime.Value);
-      wnd := GetForegroundWindow;
-      Application.Restore;
-    end
+  begin
+    Application.Minimize;
+    Sleep(DelayTime.Value);
+    wnd := GetForegroundWindow;
+    Application.Restore;
+  end
   else
     wnd := StrToInt(WndValue.Text);
 
@@ -159,11 +168,13 @@ procedure TMainForm.BrowsePasClick(Sender: TObject);
 var
   s: string;
 begin
-  with SaveDialog1 do begin
+  with SaveDialog1 do
+  begin
     FileName := '';
     DefaultExt := 'pas';
     Filter := 'Delphi Units|*.pas';
-    if Execute then begin
+    if Execute then
+    begin
       PasFileName.Text := FileName;
       s := ChangeFileExt(ExtractFileName(FileName), '');
       if LowerCase(Copy(s, 1, 3)) = 'frm' then
@@ -177,16 +188,18 @@ end;
 
 procedure TMainForm.BrowseRCClick(Sender: TObject);
 begin
-  with SaveDialog1 do begin
+  with SaveDialog1 do
+  begin
     FileName := '';
     DefaultExt := 'rc';
     Filter := 'Resource scripts|*.rc';
-//    if Execute then RCFileName.Text := FileName;
+    //    if Execute then RCFileName.Text := FileName;
   end;
 end;
 
 
-procedure TMainForm.GenerateDfmFile(const filename, frmName: string; wnd : HWND; PasList : TStrings);
+procedure TMainForm.GenerateDfmFile(const filename, frmName: string;
+  wnd: HWND; PasList: TStrings);
 var
   OutStream: TFileStream;
   b1: TDfmBuilder;
@@ -200,14 +213,15 @@ end;
 
 procedure TMainForm.GeneratePasFile(const filename, frmname: string; PasList: TStrings);
 var
-  title : string;
-  fpas : TTextWriter;
-  i : Integer;
+  title: string;
+  fpas: TTextWriter;
+  i: integer;
 begin
   fpas := TTextWriter.CreateFile(filename);
   try
     title := ChangeFileExt(ExtractFileName(filename), '');
-    with fpas do begin
+    with fpas do
+    begin
       WriteLn('unit ' + title + ';');
       WriteLn('');
       WriteLn('interface');
@@ -243,8 +257,8 @@ end;
 procedure TMainForm.SavePasClick(Sender: TObject);
 var
   dfmName: string;
-  wnd : HWND;
-  s : TStringList;
+  wnd: HWND;
+  s: TStringList;
 begin
   Application.Minimize;
   Sleep(DelayTime.Value);
@@ -265,14 +279,14 @@ var
   UnitName: string;
 begin
   UnitName := ChangeFileExt(ExtractFileName(PasFileName.Text), '');
-  SavePas.Enabled := IsValidIdent(FormName.Text) and IsValidIdent(UnitName) and (CompareText(UnitName, FormName.Text) <> 0);
+  SavePas.Enabled := IsValidIdent(FormName.Text) and IsValidIdent(UnitName) and
+    (CompareText(UnitName, FormName.Text) <> 0);
 end;
 
 procedure TMainForm.PasEditChange(Sender: TObject);
 begin
   EnableSavePas;
 end;
-
 
 
 

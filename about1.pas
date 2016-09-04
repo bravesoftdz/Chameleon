@@ -1,5 +1,7 @@
 unit about1;
 
+{$MODE Delphi}
+
 interface
 
 uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
@@ -24,7 +26,7 @@ var
 
 implementation
 
-{$R *.DFM}
+{$R *.lfm}
 
 end.
  

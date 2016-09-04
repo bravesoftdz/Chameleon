@@ -1,7 +1,10 @@
 program Chameleon;
 
+{$MODE Delphi}
+
 uses
   Forms,
+  Interfaces,
   frmMain in 'frmMain.pas' {MainForm},
   frmResults in 'frmResults.pas' {Results},
   Writers in 'Writers.pas',
@@ -10,7 +13,7 @@ uses
   about1 in 'about1.pas' {AboutBox};
 
 
-{$R *.RES}
+{$R *.res}
 
 begin
   Application.Initialize;
