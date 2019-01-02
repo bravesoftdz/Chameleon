@@ -126,8 +126,7 @@ end;
 
 procedure TDfmBuilder.Build(OutStream: TStream; const frmName: string; wnd: HWND);
 var
-  //InStream: TMemoryStream;
-  InStream: TFileStream;
+  InStream: TMemoryStream;
   childlist: TList;
   i: integer;
   style, exstyle: longint;
@@ -155,8 +154,7 @@ var
 begin
   // Initialize
   FillChar(Counts, sizeof(Counts), #0);
-  //InStream := TMemoryStream.Create;
-  InStream := TFileStream.Create('C:\temp1.txt', fmCreate);
+  InStream := TMemoryStream.Create;
   Dfm1 := TDfmWriter.Create(InStream);
   childlist := TList.Create;
 

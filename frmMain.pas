@@ -9,6 +9,9 @@ uses
   StdCtrls, ExtCtrls, Spin, ComCtrls, Buttons;
 
 type
+
+  { TMainForm }
+
   TMainForm = class(TForm)
     DelayTime: TSpinEdit;
     lblDelayTime: TLabel;
@@ -43,6 +46,7 @@ type
     procedure optAutomaticClick(Sender: TObject);
     procedure RCFileNameChange(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure SaveRCClick(Sender: TObject);
   private
     procedure GenerateDfmFile(const filename, frmname: string;
       wnd: HWND; PasList: TStrings);
@@ -316,6 +320,11 @@ end;
 procedure TMainForm.BitBtn1Click(Sender: TObject);
 begin
   AboutBox.ShowModal;
+end;
+
+procedure TMainForm.SaveRCClick(Sender: TObject);
+begin
+
 end;
 
 end.
